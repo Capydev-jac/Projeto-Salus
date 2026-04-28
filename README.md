@@ -77,15 +77,15 @@ O **MMdeDisk** é uma solução completa composta por:
 
 ---
 
-<h2>👥 Equipe</h2>
+<h2>Equipe</h2>
 
-| Nome | Cargo | Mídia Social |
-|------|-------|--------------|
-| [Seu Nome] | Scrum Master | <a href="https://github.com/seu-usuario"><img src="https://skillicons.dev/icons?i=github" height="24"></a> |
-| [Seu Nome] | Project Owner | <a href="https://github.com/seu-usuario"><img src="https://skillicons.dev/icons?i=github" height="24"></a> |
-| [Seu Nome] | Desenvolvedor Backend | <a href="https://github.com/seu-usuario"><img src="https://skillicons.dev/icons?i=github" height="24"></a> |
-| [Seu Nome] | Desenvolvedor IoT | <a href="https://github.com/seu-usuario"><img src="https://skillicons.dev/icons?i=github" height="24"></a> |
-| [Seu Nome] | Desenvolvedor Mobile | <a href="https://github.com/seu-usuario"><img src="https://skillicons.dev/icons?i=github" height="24"></a> |
+| Nome | Cargo | Midia Social |
+| ---- | ----- | ------------ |
+| Gabriel Frois | Scrum Master | <a href="https://github.com/GabrielFrois"><img src="https://skillicons.dev/icons?i=github"></a> |
+| Gabriel Camargo | Project Owner | <a href="https://github.com/AllanDreemur"><img src="https://skillicons.dev/icons?i=github"></a> |
+| Felipe Ribeiro | Desenvolvedor | <a href="https://github.com/feliperib286"><img src="https://skillicons.dev/icons?i=github"></a> |
+| João Victor | Desenvolvedor | <a href="https://github.com/joaoestreano"><img src="https://skillicons.dev/icons?i=github"></a> |
+| Pedro Prado | Desenvolvedor | <a href="https://github.com/PeedroPrado"><img src="https://skillicons.dev/icons?i=github"></a> |
 
 ---
 
