@@ -81,10 +81,10 @@ O **MMdeDisk** é uma solução completa composta por:
 
 | Nome | Cargo | Midia Social |
 | ---- | ----- | ------------ |
-| Gabriel Frois | Scrum Master | <a href="https://github.com/GabrielFrois"><img src="https://skillicons.dev/icons?i=github"></a> |
-| Gabriel Camargo | Project Owner | <a href="https://github.com/AllanDreemur"><img src="https://skillicons.dev/icons?i=github"></a> |
+| Gabriel Camargo | Scrum Master | <a href="https://github.com/AllanDreemur"><img src="https://skillicons.dev/icons?i=github"></a> |
+| João Victor | Project Owner | <a href="https://github.com/joaoestreano"><img src="https://skillicons.dev/icons?i=github"></a> |
+| Gabriel Frois | Desenvolvedor | <a href="https://github.com/GabrielFrois"><img src="https://skillicons.dev/icons?i=github"></a> |
 | Felipe Ribeiro | Desenvolvedor | <a href="https://github.com/feliperib286"><img src="https://skillicons.dev/icons?i=github"></a> |
-| João Victor | Desenvolvedor | <a href="https://github.com/joaoestreano"><img src="https://skillicons.dev/icons?i=github"></a> |
 | Pedro Prado | Desenvolvedor | <a href="https://github.com/PeedroPrado"><img src="https://skillicons.dev/icons?i=github"></a> |
 
 ---
