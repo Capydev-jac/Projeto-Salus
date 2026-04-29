@@ -1,0 +1,97 @@
+// --- CARROSSEL DE 21 DIVISÕES ---
+d_externo = 207; 
+d_interno = 70;  
+h_carrossel = 50; 
+esp = 2;
+
+union() {
+    // Paredes circulares
+    difference() {
+        cylinder(h=h_carrossel, d=d_externo, $fn=100);
+        translate([0,0,-1]) cylinder(h=h_carrossel+2, d=d_externo-esp*2, $fn=100);
+    }
+    // Núcleo com encaixe D-Shaft para o motor
+    difference() {
+        cylinder(h=h_carrossel, d=d_interno, $fn=100);
+        translate([0,0,-1]) intersection() {
+            cylinder(h=h_carrossel+2, d=5.5, $fn=50); // Diâmetro do eixo
+            cube([5.5, 3.5, h_carrossel+2], center=true); // Achatado do eixo
+        }
+    }
+    // 21 Divisórias
+    for (i = [0 : 20]) {
+        rotate([0, 0, i * (360/21)])
+            translate([d_interno/2, -esp/2, 0])
+                cube([(d_externo-d_interno)/2, esp, h_carrossel]);
+    }
+}
+
+
+
+
+--------------------------------------------------------------------
+
+// --- BASE FIXA COM NICHO PARA GAVETA ---
+d_externo = 207; 
+h_base = 35; 
+esp = 3; 
+folga = 1.5;
+
+difference() {
+    // Corpo da base
+    cylinder(h = h_base, d = d_externo + esp*2 + folga, $fn=120);
+    
+    // Cavidade do carrossel
+    translate([0, 0, h_base - 15]) 
+        cylinder(h = 20, d = d_externo + folga, $fn=120);
+
+    // Nicho da gaveta
+    translate([d_externo/2 - 30, -25, -1])
+        cube([60, 50, h_base - 10]); 
+
+    // Canal de queda inclinado
+    rotate([0, 0, -10])
+    translate([35, -20, h_base - 18]) 
+    rotate([0, 20, 0]) 
+        cube([d_externo/2 + 10, 40, 30]);
+
+    // Furo do motor
+    translate([0,0,-1])
+        cylinder(h = 40, d = 10, center = true, $fn=50);
+}
+
+
+--------------------------------------------------------------------
+
+// --- GAVETA COLETORA ---
+h_base = 35; 
+esp = 2.5;
+
+union() {
+    difference() {
+        // Corpo da gaveta
+        cube([55, 45, h_base - 15], center=true);
+        // Interior oco
+        translate([0, 0, esp])
+            cube([55 - esp*2, 45 - esp*2, h_base], center=true);
+    }
+    // Puxador externo
+    translate([27.5, -10, - (h_base - 15)/2])
+        cube([10, 20, h_base - 15]);
+}
+
+----------------------------------------------------------------------
+
+
+// --- TAMPA SUPERIOR ---
+d_externo = 207; 
+esp = 3;
+
+difference() {
+    cylinder(h=8, d=d_externo + esp*4, $fn=120); // Topo
+    translate([0,0,-1]) 
+        cylinder(h=6, d=d_externo + esp*2 + 1.5, $fn=120); // Encaixe
+}
+
+
+-------------------------------------------------------------
