@@ -1,133 +1,202 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+import {
+  View, Text, TextInput, StyleSheet, SafeAreaView,
+  TouchableOpacity, ActivityIndicator,
+} from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../styles/theme';
-import CustomButton from '../components/CustomButton';
-import { useAuth } from '../contexts/AuthContext'; 
+import { useAuth } from '../contexts/AuthContext';
 
 type Props = { navigation: NativeStackNavigationProp<RootStackParamList, 'SignUp'> };
+
+const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Checklist de requisitos da senha
+const senhaRequisitos = [
+  { label: 'Mínimo 8 caracteres', test: (s: string) => s.length >= 8 },
+  { label: '1 letra maiúscula', test: (s: string) => /[A-Z]/.test(s) },
+  { label: '1 caractere especial (!@#$...)', test: (s: string) => /[!@#$%^&*(),.?":{}|<>]/.test(s) },
+];
 
 export default function SignUpScreen({ navigation }: Props) {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  
-  // Estados para controlar as mensagens de erro visuais
-  const [emailError, setEmailError] = useState('');
-  const [senhaError, setSenhaError] = useState('');
-  const [confirmarSenhaError, setConfirmarSenhaError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const { signUp } = useAuth(); 
+  // Controla se o usuário já tocou no campo de senha (para mostrar o checklist)
+  const [senhaFocused, setSenhaFocused] = useState(false);
+
+  const [nomeError, setNomeError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [confirmarSenhaError, setConfirmarSenhaError] = useState('');
+  const [serverError, setServerError] = useState('');
+
+  const { signUp } = useAuth();
 
   const handleSignUp = async () => {
-    // Resetar erros antes de validar
-    let isValid = true;
+    setNomeError('');
     setEmailError('');
-    setSenhaError('');
     setConfirmarSenhaError('');
+    setServerError('');
 
-    if (!nome || !email || !senha || !confirmarSenha) {
-      Alert.alert('Atenção', 'Preencha todos os campos!');
-      return;
-    }
+    let isValid = true;
 
-    // Validação do formato do E-mail
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
-      setEmailError('Insira um e-mail válido (ex: nome@email.com)');
+    if (!nome.trim()) {
+      setNomeError('Informe seu nome.');
       isValid = false;
     }
 
-    // Validação de força da Senha
-const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    if (!email.trim()) {
+      setEmailError('Informe seu e-mail.');
+      isValid = false;
+    } else if (!emailRegex.test(email.trim())) {
+      setEmailError('Insira um e-mail válido (ex: nome@email.com).');
+      isValid = false;
+    }
 
-if (!passwordRegex.test(senha)) {
+    // Senha: o checklist já mostra os requisitos visualmente
+    // Aqui só bloqueamos o envio se a senha não estiver ok
+    const senhaValida = passwordRegex.test(senha);
+    if (!senhaValida) {
+      setSenhaFocused(true);
+      isValid = false;
+    }
 
-  setSenhaError('Mínimo de 8 caracteres, 1 maiúscula e 1 especial.');
+    if (!confirmarSenha) {
+      setConfirmarSenhaError('Confirme sua senha.');
+      isValid = false;
+    } else if (senha !== confirmarSenha) {
+      setConfirmarSenhaError('As senhas não coincidem.');
+      isValid = false;
+    }
 
-  isValid = false;
-
-}
-
-// Validação se as senhas coincidem
-if (senha.trim() !== confirmarSenha.trim()) {
-
-  setConfirmarSenhaError('As senhas não coincidem.');
-
-  isValid = false;
-
-}
-
-    // Se alguma validação falhou, interrompe o cadastro
     if (!isValid) return;
 
+    setLoading(true);
     try {
-      await signUp(email.toLowerCase().trim(), senha, nome);
+      await signUp(email.toLowerCase().trim(), senha, nome.trim());
       navigation.navigate('ProfileConfirmed');
     } catch (error: any) {
-      Alert.alert('Erro no Cadastro', error.message);
+      const msg: string = error.message ?? '';
+      if (msg.toLowerCase().includes('e-mail') || msg.toLowerCase().includes('email') || msg.toLowerCase().includes('cadastrado')) {
+        setEmailError(msg);
+      } else {
+        setServerError(msg || 'Erro ao criar conta. Tente novamente.');
+      }
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const senhaInputBorderColor = (): object | null => {
+    if (!senhaFocused) return null;
+    if (!senha) return null;
+    return passwordRegex.test(senha) ? styles.inputSuccess : styles.inputError;
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-         <Feather name="arrow-left" size={24} color={theme.colors.textPrimary} />
+        <Feather name="arrow-left" size={24} color={theme.colors.textPrimary} />
       </TouchableOpacity>
 
       <Text style={styles.title}>Para começar,{'\n'}preciso de algumas{'\n'}informações</Text>
-      
+
+      {serverError ? (
+        <View style={styles.errorBanner}>
+          <Feather name="alert-circle" size={16} color="#FF3B30" />
+          <Text style={styles.errorBannerText}>{serverError}</Text>
+        </View>
+      ) : null}
+
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Qual seu Nome?</Text>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Ex: João" 
-          value={nome} 
-          onChangeText={setNome} 
+        <TextInput
+          style={[styles.input, nomeError ? styles.inputError : null]}
+          placeholder="Ex: João"
+          value={nome}
+          onChangeText={(t) => { setNome(t); setNomeError(''); }}
+          editable={!loading}
         />
-        
+        {nomeError ? <Text style={styles.errorText}>{nomeError}</Text> : null}
+
         <Text style={styles.label}>Qual seu Email?</Text>
-        <TextInput 
-          // Aplica estilo de erro (borda vermelha) se houver emailError
-          style={[styles.input, emailError ? styles.inputError : null]} 
-          placeholder="Insira seu Email" 
-          value={email} 
-          onChangeText={(text) => { setEmail(text); setEmailError(''); }} 
-          keyboardType="email-address" 
-          autoCapitalize="none" 
+        <TextInput
+          style={[styles.input, emailError ? styles.inputError : null]}
+          placeholder="Insira seu Email"
+          value={email}
+          onChangeText={(t) => { setEmail(t); setEmailError(''); setServerError(''); }}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          editable={!loading}
         />
-        {/* Renderiza o texto de erro visualmente abaixo do input */}
         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-        
+
         <Text style={styles.label}>Crie uma Senha</Text>
         <TextInput
-          style={[styles.input, senhaError ? styles.inputError : null]}
+          style={[styles.input, senhaInputBorderColor()]}
           placeholder="Crie uma senha"
           value={senha}
-          onChangeText={(text) => { setSenha(text); setSenhaError(''); }}
+          onChangeText={(t) => { setSenha(t); }}
+          onFocus={() => setSenhaFocused(true)}
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
+          editable={!loading}
         />
-        {senhaError ? <Text style={styles.errorText}>{senhaError}</Text> : null}
-        
-        <Text style={styles.label}>Confirme a Senha</Text>
+
+        {/* Checklist de requisitos */}
+        {senhaFocused ? (
+          <View style={styles.requisitosContainer}>
+            {senhaRequisitos.map((req) => {
+              const ok = req.test(senha);
+              return (
+                <View key={req.label} style={styles.requisitoRow}>
+                  <Feather
+                    name={ok ? 'check-circle' : 'circle'}
+                    size={14}
+                    color={ok ? '#34C759' : '#AAAAAA'}
+                  />
+                  <Text style={[styles.requisitoText, ok && styles.requisitoOk]}>
+                    {req.label}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+        ) : null}
+
+        <Text style={[styles.label, { marginTop: senhaFocused ? 8 : 0 }]}>Confirme a Senha</Text>
         <TextInput
           style={[styles.input, confirmarSenhaError ? styles.inputError : null]}
           placeholder="Confirme a senha"
           value={confirmarSenha}
-          onChangeText={(text) => { setConfirmarSenha(text); setConfirmarSenhaError(''); }}
+          onChangeText={(t) => { setConfirmarSenha(t); setConfirmarSenhaError(''); }}
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
+          editable={!loading}
         />
         {confirmarSenhaError ? <Text style={styles.errorText}>{confirmarSenhaError}</Text> : null}
       </View>
 
-      <CustomButton title="Confirmar" onPress={handleSignUp} />
+      <TouchableOpacity
+        style={[styles.button, loading && styles.buttonDisabled]}
+        onPress={handleSignUp}
+        disabled={loading}
+        activeOpacity={0.8}
+      >
+        {loading ? (
+          <ActivityIndicator color={theme.colors.textLight} size="small" />
+        ) : (
+          <Text style={styles.buttonText}>Confirmar</Text>
+        )}
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -135,28 +204,62 @@ if (senha.trim() !== confirmarSenha.trim()) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.background, padding: theme.spacing.l },
   backButton: { marginTop: theme.spacing.s, marginBottom: theme.spacing.m },
-  title: { fontSize: 24, fontWeight: 'bold', color: theme.colors.textPrimary, textAlign: 'center', marginBottom: 30 },
-  inputContainer: { width: '100%', marginBottom: 30 },
-  label: { fontSize: 16, marginBottom: 5, fontWeight: '500', color: theme.colors.textPrimary },
-  input: { 
-    backgroundColor: theme.colors.white, 
-    borderRadius: theme.borderRadius.xl, 
-    paddingHorizontal: 15, 
-    paddingVertical: 12, 
-    marginBottom: 15 
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: theme.colors.textPrimary,
+    textAlign: 'center',
+    marginBottom: 20,
   },
-  
-  // Novos estilos para os erros visuais
-  inputError: {
+
+  errorBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF0F0',
     borderWidth: 1,
-    borderColor: '#FF3B30', // Borda vermelha
-    marginBottom: 5, // Reduz o espaçamento para aproximar o texto de erro
+    borderColor: '#FF3B30',
+    borderRadius: theme.borderRadius.m,
+    padding: 12,
+    marginBottom: theme.spacing.m,
+    gap: 8,
   },
-  errorText: {
-    color: '#FF3B30',
-    fontSize: 12,
+  errorBannerText: { color: '#FF3B30', fontSize: 14, flex: 1 },
+
+  inputContainer: { width: '100%', marginBottom: 20 },
+  label: { fontSize: 16, marginBottom: 5, fontWeight: '500', color: theme.colors.textPrimary },
+  input: {
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.xl,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
     marginBottom: 15,
-    marginLeft: 5,
-    marginTop: -2,
-  }
+    fontSize: 16,
+  },
+  inputError: { borderWidth: 1, borderColor: '#FF3B30', marginBottom: 5 },
+  inputSuccess: { borderWidth: 1, borderColor: '#34C759', marginBottom: 8 },
+  errorText: { color: '#FF3B30', fontSize: 12, marginBottom: 15, marginLeft: 5, marginTop: -2 },
+
+  // Checklist de requisitos da senha
+  requisitosContainer: {
+    backgroundColor: '#F7F7F7',
+    borderRadius: theme.borderRadius.m,
+    padding: 12,
+    marginBottom: 6,
+    gap: 6,
+  },
+  requisitoRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  requisitoText: { fontSize: 13, color: '#AAAAAA' },
+  requisitoOk: { color: '#34C759' },
+
+  button: {
+    backgroundColor: theme.colors.primary,
+    padding: theme.spacing.m,
+    borderRadius: theme.borderRadius.xl,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    minHeight: 52,
+  },
+  buttonDisabled: { opacity: 0.7 },
+  buttonText: { color: theme.colors.textLight, fontWeight: 'bold', fontSize: 16 },
 });
