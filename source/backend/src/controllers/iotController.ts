@@ -41,4 +41,33 @@ export const proximoMedicamento = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ erro: 'Erro ao buscar medicamento' });
   }
+}
+
+export const listarEventos = async (
+  req: Request,
+  res: Response
+) => {
+
+  try {
+
+    const resultado = await pool.query(`
+      SELECT *
+      FROM eventos_iot
+      ORDER BY horario DESC
+    `);
+
+    res.status(200).json(
+      resultado.rows
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      erro: 'Erro ao listar eventos'
+    });
+
+  }
+
 };

@@ -1,7 +1,7 @@
 import mqtt from 'mqtt';
 
 const client = mqtt.connect(
-  'wss://broker.hivemq.com:8884/mqtt'
+  "mqtt://broker.hivemq.com:1883"
 );
 
 client.on('connect', () => {
@@ -13,6 +13,8 @@ client.on('connect', () => {
   client.subscribe(
     'fatec/salus/capydev/eventos'
   );
+
+  console.log("Escutando eventos IoT")
 
 });
 

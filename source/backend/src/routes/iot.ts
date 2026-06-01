@@ -2,7 +2,8 @@ import { Router } from 'express';
 
 import {
   receberEvento,
-  proximoMedicamento
+  proximoMedicamento,
+  listarEventos
 } from '../controllers/iotController';
 
 import {
@@ -57,6 +58,15 @@ router.post(
     });
 
   }
+);
+
+// ======================================
+// LISTA EVENTOS IOT
+// ======================================
+
+router.get(
+  '/eventos',
+  listarEventos
 );
 
 

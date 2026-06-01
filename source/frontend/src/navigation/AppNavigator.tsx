@@ -3,6 +3,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Medicamento } from '../contexts/AuthContext';
 
+import WelcomeScreen from '../screens/WelcomeScreen';
+import LoginScreen from '../screens/LoginScreen';
+import SignUpScreen from '../screens/SignUpScreen';
+import ProfileConfirmedScreen from '../screens/ProfileConfirmedScreen';
+import DependentSignUpScreen from '../screens/DependentSignUpScreen';
+import RoutineSetupScreen from '../screens/RoutineSetupScreen';
+import NotificationSetupScreen from '../screens/NotificationSetupScreen';
+import HomeScreen from '../screens/HomeScreen';
+import SearchScreen from '../screens/SearchScreen';
+import DependentDashboardScreen from '../screens/DependentDashboardScreen';
+import HistoricoEventosScreen from '../screens/HistoricoEventosScreen';
+
 export type RootStackParamList = {
   Welcome: undefined;
   Login: undefined;
@@ -14,20 +26,10 @@ export type RootStackParamList = {
   Home: undefined;
   DependentDashboard: { dependenteId: string; dependenteNome: string };
   Search: { dependenteId?: string; medicamento?: Medicamento };
+  HistoricoEventos: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-import WelcomeScreen from '../screens/WelcomeScreen';
-import LoginScreen from '../screens/LoginScreen';
-import SignUpScreen from '../screens/SignUpScreen';
-import ProfileConfirmedScreen from '../screens/ProfileConfirmedScreen';
-import DependentSignUpScreen from '../screens/DependentSignUpScreen';
-import RoutineSetupScreen from '../screens/RoutineSetupScreen';
-import NotificationSetupScreen from '../screens/NotificationSetupScreen';
-import HomeScreen from '../screens/HomeScreen';
-import SearchScreen from '../screens/SearchScreen';
-import DependentDashboardScreen from '../screens/DependentDashboardScreen';
 
 export default function AppNavigator() {
   return (
@@ -49,6 +51,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="DependentDashboard" component={DependentDashboardScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="HistoricoEventos" component={HistoricoEventosScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

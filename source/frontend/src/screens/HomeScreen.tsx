@@ -109,6 +109,15 @@ export default function HomeScreen({ navigation }: Props) {
           style={{ marginBottom: theme.spacing.l }}
         />
 
+        <CustomButton
+          title="Histórico IoT"
+          onPress={() =>
+            navigation.navigate(
+              'HistoricoEventos'
+            )
+          }
+        />
+        
         <FlatList
           data={dependentes}
           keyExtractor={(item) => item.id}
