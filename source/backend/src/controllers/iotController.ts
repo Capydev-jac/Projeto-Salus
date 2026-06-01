@@ -51,10 +51,18 @@ export const listarEventos = async (
   try {
 
     const resultado = await pool.query(`
-      SELECT *
-      FROM eventos_iot
-      ORDER BY horario DESC
-    `);
+    SELECT
+      e.id,
+      e.medicamento_id,
+      m.nome AS medicamento_nome,
+      e.compartimento,
+      e.status,
+      e.horario
+    FROM eventos_iot e
+    LEFT JOIN medicamentos m
+      ON m.id = e.medicamento_id
+    ORDER BY e.horario DESC
+  `);
 
     res.status(200).json(
       resultado.rows
