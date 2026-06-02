@@ -2,13 +2,13 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { createDatabaseIfNotExists, initDb } from './database';
-
 import authRoutes from './routes/auth';
 import dependentesRoutes from './routes/dependentes';
 import medicamentosRoutes from './routes/medicamentos';
 import iotRoutes from './routes/iot';
 import './config/mqtt';
 import { iniciarAgendador } from './service/agendarMedicamentos';
+import notificacaoRoutes from './routes/notificacao'
 
 const app = express();
 app.use(cors());
@@ -19,6 +19,7 @@ app.use('/api', authRoutes);
 app.use('/api', dependentesRoutes);
 app.use('/api', medicamentosRoutes);
 app.use('/iot', iotRoutes);
+app.use('/notificacoes', notificacaoRoutes)
 
 
 // ─── Inicialização do Servidor ────────────────────────────────────────────────
