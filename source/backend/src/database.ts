@@ -126,6 +126,24 @@ export const initDb = async () => {
 
 );
   `);
+  
+  // ======================================
+// ENTREGAS REALIZADAS
+// ======================================
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS entregas_realizadas (
+
+    id SERIAL PRIMARY KEY,
+
+    medicamento_id INT NOT NULL
+      REFERENCES medicamentos(id)
+      ON DELETE CASCADE,
+
+    data_execucao TIMESTAMP
+      DEFAULT CURRENT_TIMESTAMP
+
+  );
+`);
 
   console.log('Tabelas verificadas/criadas com sucesso!');
 

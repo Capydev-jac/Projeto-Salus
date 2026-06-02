@@ -8,6 +8,7 @@ import dependentesRoutes from './routes/dependentes';
 import medicamentosRoutes from './routes/medicamentos';
 import iotRoutes from './routes/iot';
 import './config/mqtt';
+import { iniciarAgendador } from './services/agendadorMedicamentos';
 
 const app = express();
 app.use(cors());
@@ -29,6 +30,7 @@ const startServer = async () => {
   try {
     await createDatabaseIfNotExists();
     await initDb();
+    iniciarAgendador();
     
     app.listen(PORT, IP, () => {
        console.log(`🚀 Servidor rodando em http://${IP}:${PORT}`);

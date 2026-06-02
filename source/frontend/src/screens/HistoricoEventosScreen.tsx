@@ -71,8 +71,8 @@ export default function HistoricoEventosScreen() {
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.cardTitle}>
-              💊 {item.medicamento_nome || 'Medicamento'}
-            </Text>
+  💊 {item.medicamento_nome || 'Medicamento'}
+</Text>
 
             <Text style={styles.cardText}>
               Compartimento: {item.compartimento}
