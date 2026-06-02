@@ -145,6 +145,25 @@ await pool.query(`
   );
 `);
 
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS notificacoes (
+
+    id SERIAL PRIMARY KEY,
+
+    medicamento_id INT
+      REFERENCES medicamentos(id)
+      ON DELETE SET NULL,
+
+    mensagem TEXT NOT NULL,
+
+    lida BOOLEAN DEFAULT FALSE,
+
+    created_at TIMESTAMP
+      DEFAULT CURRENT_TIMESTAMP
+
+  );
+`);
+
   console.log('Tabelas verificadas/criadas com sucesso!');
 
 };

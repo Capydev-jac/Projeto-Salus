@@ -1,10 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../middleware/auth';
-import {
-  createDependente,
-  listDependentes,
-  updateDependente,
-  deleteDependente,
+import { createDependente, listDependentes, updateDependente, deleteDependente,
 } from '../controllers/dependentesController';
 
 const router = Router();

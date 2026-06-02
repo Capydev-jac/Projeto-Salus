@@ -22,24 +22,64 @@ export function iniciarAgendador() {
         `⏰ Verificando horário: ${agora}`
       );
 
-      const resultado =
-        await pool.query(`
-          SELECT
-            id,
-            nome,
-            compartimento,
-            horario
-          FROM medicamentos
-          WHERE horario = $1
-        `, [agora]);
+      const diasSemana = [
+  'Dom',
+  'Seg',
+  'Ter',
+  'Qua',
+  'Qui',
+  'Sex',
+  'Sáb'
+];
+
+const diaAtual =
+  diasSemana[
+    new Date().getDay()
+  ];
+
+const resultado =
+  await pool.query(`
+    SELECT
+      id,
+      nome,
+      compartimento,
+      horario,
+      dias
+    FROM medicamentos
+    WHERE horario = $1
+  `, [agora]);
+
+const medicamentosFiltrados =
+  resultado.rows.filter(
+    medicamento => {
+
+      try {
+
+        const dias =
+          JSON.parse(
+            medicamento.dias
+          );
+
+        return dias.includes(
+          diaAtual
+        );
+
+      } catch {
+
+        return false;
+
+      }
+
+    }
+  );
 
       console.log(
-        `📋 Encontrados ${resultado.rows.length} medicamentos`
+        `📋 Encontrados ${medicamentosFiltrados.length} medicamentos`
       );
 
       for (
         const medicamento
-        of resultado.rows
+        of medicamentosFiltrados
       ) {
 
         console.log(
