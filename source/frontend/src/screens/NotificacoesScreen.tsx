@@ -89,9 +89,6 @@ export default function NotificacoesScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>
-        🔔 Notificações
-      </Text>
 
       <Text style={styles.counter}>
         Total de notificações: {notificacoes.length}

@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, } from 'react-native';
 import { theme } from '../styles/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Feather } from '@expo/vector-icons';
 
 type Evento = {
   id: number;
@@ -57,9 +52,6 @@ export default function HistoricoEventosScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>
-        Histórico IoT
-      </Text>
 
       <Text style={styles.counter}>
         Total de eventos: {eventos.length}

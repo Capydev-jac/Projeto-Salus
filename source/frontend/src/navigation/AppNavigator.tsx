@@ -52,8 +52,9 @@ export default function AppNavigator() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="DependentDashboard" component={DependentDashboardScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
-        <Stack.Screen name="HistoricoEventos" component={HistoricoEventosScreen} />
-        <Stack.Screen name="Notificacoes" component={NotificacoesScreen} />
+        <Stack.Screen name="HistoricoEventos" component={HistoricoEventosScreen} options={{ headerShown: true, title: 'Histórico IoT', }} />
+        <Stack.Screen name="Notificacoes" component={NotificacoesScreen} options={{ headerShown: true, title: 'Notificações', }}
+/>
       </Stack.Navigator>
     </NavigationContainer>
   );
