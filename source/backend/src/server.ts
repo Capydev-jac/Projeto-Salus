@@ -8,7 +8,7 @@ import dependentesRoutes from './routes/dependentes';
 import medicamentosRoutes from './routes/medicamentos';
 import iotRoutes from './routes/iot';
 import './config/mqtt';
-import { iniciarAgendador } from './services/agendadorMedicamentos';
+import { iniciarAgendador } from './service/agendarMedicamentos';
 
 const app = express();
 app.use(cors());
