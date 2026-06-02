@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import {
   SafeAreaView,
   Text,
@@ -6,6 +7,7 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 
 import { theme } from '../styles/theme';
@@ -33,17 +35,43 @@ export default function NotificacoesScreen() {
 
       const response =
         await fetch(
-          'https://projeto-salus-production.up.railway.app/api/notificacoes'
+          'https://projeto-salus-production.up.railway.app/notificacoes'
         );
 
       const data =
         await response.json();
 
       setNotificacoes(data);
+
     } catch (error) {
+
       console.log(error);
+
     } finally {
+
       setLoading(false);
+
+    }
+  }
+
+  async function marcarComoLida(
+    id: number
+  ) {
+    try {
+
+      await fetch(
+        `https://projeto-salus-production.up.railway.app/notificacoes/${id}/lida`,
+        {
+          method: 'PUT',
+        }
+      );
+
+      carregarNotificacoes();
+
+    } catch (error) {
+
+      console.log(error);
+
     }
   }
 
@@ -76,7 +104,9 @@ export default function NotificacoesScreen() {
         refreshing={loading}
         onRefresh={carregarNotificacoes}
         renderItem={({ item }) => (
+
           <View style={styles.card}>
+
             <Text style={styles.alert}>
               ⚠️ Alerta
             </Text>
@@ -90,7 +120,20 @@ export default function NotificacoesScreen() {
                 item.created_at
               ).toLocaleString('pt-BR')}
             </Text>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>
+                marcarComoLida(item.id)
+              }
+            >
+              <Text style={styles.buttonText}>
+                ✓ Marcar como lida
+              </Text>
+            </TouchableOpacity>
+
           </View>
+
         )}
         ListEmptyComponent={
           <Text style={styles.empty}>
@@ -150,6 +193,20 @@ const styles = StyleSheet.create({
   date: {
     color:
       theme.colors.textSecondary,
+    fontSize: 14,
+    marginBottom: 12,
+  },
+
+  button: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+
+  buttonText: {
+    color: '#FFF',
+    fontWeight: 'bold',
     fontSize: 14,
   },
 

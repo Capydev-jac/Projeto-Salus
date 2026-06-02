@@ -10,8 +10,9 @@ async (
   const resultado =
     await pool.query(`
       SELECT *
-      FROM notificacoes
-      ORDER BY created_at DESC
+FROM notificacoes
+WHERE lida = FALSE
+ORDER BY created_at DESC
     `);
 
   res.json(
@@ -19,3 +20,37 @@ async (
   );
 
 };
+
+export async function marcarComoLida(
+  req: Request,
+  res: Response
+) {
+  try {
+
+    const { id } = req.params;
+
+    await pool.query(
+      `
+      UPDATE notificacoes
+      SET lida = TRUE
+      WHERE id = $1
+      `,
+      [id]
+    );
+
+    return res.status(200).json({
+      message:
+        'Notificação marcada como lida'
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    return res.status(500).json({
+      error:
+        'Erro ao atualizar notificação'
+    });
+
+  }
+}
