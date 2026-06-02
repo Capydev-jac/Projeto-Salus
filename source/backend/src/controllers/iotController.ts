@@ -46,20 +46,22 @@ export const proximoMedicamento = async (req: Request, res: Response) => {
 export const listarEventos = async (
   req: Request,
   res: Response
-
 ) => {
-  console.log("Listando eventos IoT...")
 
   try {
 
     const resultado = await pool.query(`
-     SELECT
-    e.id,
-    'TESTE123' AS medicamento_nome,
-    e.compartimento,
-    e.status,
-    e.horario
-  FROM eventos_iot e
+    SELECT
+      e.id,
+      e.medicamento_id,
+      m.nome AS medicamento_nome,
+      e.compartimento,
+      e.status,
+      e.horario
+    FROM eventos_iot e
+    LEFT JOIN medicamentos m
+      ON m.id = e.medicamento_id
+    ORDER BY e.horario DESC
   `);
 
     res.status(200).json(
