@@ -5,7 +5,7 @@ import {
   FlatList,
   View,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 
 import { theme } from '../styles/theme';
@@ -17,7 +17,6 @@ type Notificacao = {
 };
 
 export default function NotificacoesScreen() {
-
   const [notificacoes, setNotificacoes] =
     useState<Notificacao[]>([]);
 
@@ -25,14 +24,12 @@ export default function NotificacoesScreen() {
     useState(true);
 
   useEffect(() => {
-
     carregarNotificacoes();
-
   }, []);
 
   async function carregarNotificacoes() {
-
     try {
+      setLoading(true);
 
       const response =
         await fetch(
@@ -43,21 +40,14 @@ export default function NotificacoesScreen() {
         await response.json();
 
       setNotificacoes(data);
-
     } catch (error) {
-
       console.log(error);
-
     } finally {
-
       setLoading(false);
-
     }
-
   }
 
-  if (loading) {
-
+  if (loading && notificacoes.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <ActivityIndicator
@@ -66,14 +56,16 @@ export default function NotificacoesScreen() {
         />
       </SafeAreaView>
     );
-
   }
 
   return (
     <SafeAreaView style={styles.container}>
-
       <Text style={styles.title}>
         🔔 Notificações
+      </Text>
+
+      <Text style={styles.subtitle}>
+        Total de notificações: {notificacoes.length}
       </Text>
 
       <FlatList
@@ -81,74 +73,91 @@ export default function NotificacoesScreen() {
         keyExtractor={(item) =>
           item.id.toString()
         }
+        refreshing={loading}
+        onRefresh={carregarNotificacoes}
         renderItem={({ item }) => (
-
           <View style={styles.card}>
+            <Text style={styles.alert}>
+              ⚠️ Alerta
+            </Text>
 
             <Text style={styles.message}>
               {item.mensagem}
             </Text>
 
             <Text style={styles.date}>
-              {
-                new Date(
-                  item.created_at
-                ).toLocaleString('pt-BR')
-              }
+              {new Date(
+                item.created_at
+              ).toLocaleString('pt-BR')}
             </Text>
-
           </View>
-
         )}
         ListEmptyComponent={
           <Text style={styles.empty}>
-            Nenhuma notificação encontrada.
+            🎉 Nenhuma notificação pendente.
+
+            {'\n\n'}
+
+            Todos os medicamentos foram administrados corretamente.
           </Text>
         }
       />
-
     </SafeAreaView>
   );
-
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     padding: 20,
     backgroundColor:
-      theme.colors.background
+      theme.colors.background,
   },
 
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20
+    marginBottom: 8,
+  },
+
+  subtitle: {
+    fontSize: 18,
+    color: '#666',
+    marginBottom: 20,
   },
 
   card: {
     backgroundColor:
       theme.colors.white,
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 12
+    padding: 18,
+    borderRadius: 16,
+    marginBottom: 14,
+    elevation: 2,
+  },
+
+  alert: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 
   message: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
+    marginBottom: 10,
   },
 
   date: {
-    marginTop: 8,
     color:
-      theme.colors.textSecondary
+      theme.colors.textSecondary,
+    fontSize: 14,
   },
 
   empty: {
     textAlign: 'center',
-    marginTop: 30
-  }
-
+    marginTop: 50,
+    fontSize: 18,
+    color: '#555',
+    lineHeight: 28,
+  },
 });
