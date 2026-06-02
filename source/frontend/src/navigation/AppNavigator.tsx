@@ -2,7 +2,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Medicamento } from '../contexts/AuthContext';
-
 import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
@@ -14,6 +13,7 @@ import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
 import DependentDashboardScreen from '../screens/DependentDashboardScreen';
 import HistoricoEventosScreen from '../screens/HistoricoEventosScreen';
+import NotificacoesScreen from '../screens/NotificacoesScreen'
 
 export type RootStackParamList = {
   Welcome: undefined;
@@ -27,6 +27,7 @@ export type RootStackParamList = {
   DependentDashboard: { dependenteId: string; dependenteNome: string };
   Search: { dependenteId?: string; medicamento?: Medicamento };
   HistoricoEventos: undefined;
+  Notificacoes: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -52,6 +53,7 @@ export default function AppNavigator() {
         <Stack.Screen name="DependentDashboard" component={DependentDashboardScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="HistoricoEventos" component={HistoricoEventosScreen} />
+        <Stack.Screen name="Notificacoes" component={NotificacoesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -117,6 +117,14 @@ export default function HomeScreen({ navigation }: Props) {
             )
           }
         />
+        <CustomButton
+          title="Notificações"
+          onPress={() =>
+            navigation.navigate(
+              'Notificacoes'
+            )
+          }
+        />
         
         <FlatList
           data={dependentes}
