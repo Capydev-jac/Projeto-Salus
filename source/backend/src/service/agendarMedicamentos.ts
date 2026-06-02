@@ -18,6 +18,10 @@ export function iniciarAgendador() {
             }
           );
 
+      console.log(
+        `⏰ Verificando horário: ${agora}`
+      );
+
       const resultado =
         await pool.query(`
           SELECT
@@ -28,6 +32,10 @@ export function iniciarAgendador() {
           FROM medicamentos
           WHERE horario = $1
         `, [agora]);
+
+      console.log(
+        `📋 Encontrados ${resultado.rows.length} medicamentos`
+      );
 
       for (
         const medicamento
@@ -44,6 +52,10 @@ export function iniciarAgendador() {
           compartimento:
             medicamento.compartimento
         });
+
+        console.log(
+          `📤 Comando enviado para compartimento ${medicamento.compartimento}`
+        );
 
       }
 
