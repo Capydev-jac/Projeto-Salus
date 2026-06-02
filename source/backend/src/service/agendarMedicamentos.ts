@@ -8,15 +8,16 @@ export function iniciarAgendador() {
     try {
 
       const agora =
-        new Date()
-          .toLocaleTimeString(
-            'pt-BR',
-            {
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: false
-            }
-          );
+  new Date()
+    .toLocaleTimeString(
+      'pt-BR',
+      {
+        timeZone: 'America/Sao_Paulo',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }
+    );
 
       console.log(
         `⏰ Verificando horário: ${agora}`
