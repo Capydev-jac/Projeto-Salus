@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 import { theme } from '../styles/theme';
 
@@ -20,6 +22,8 @@ type Notificacao = {
 };
 
 export default function NotificacoesScreen() {
+  const navigation = useNavigation();
+
   const [notificacoes, setNotificacoes] =
     useState<Notificacao[]>([]);
 
@@ -90,6 +94,22 @@ export default function NotificacoesScreen() {
   return (
     <SafeAreaView style={styles.container}>
 
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+        >
+          <Feather
+            name="arrow-left"
+            size={28}
+            color={theme.colors.textPrimary}
+          />
+        </TouchableOpacity>
+
+        <Text style={styles.title}>
+          Notificações
+        </Text>
+      </View>
+
       <Text style={styles.counter}>
         Total de notificações: {notificacoes.length}
       </Text>
@@ -157,33 +177,40 @@ const styles = StyleSheet.create({
       theme.colors.background,
   },
 
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+
   title: {
     fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 8,
+    color: theme.colors.textPrimary,
+    marginLeft: 12,
   },
 
   counter: {
-  fontSize: 14,
-  color: theme.colors.textSecondary,
-  marginBottom: 20,
-},
+    fontSize: 14,
+    color: theme.colors.textSecondary,
+    marginBottom: 20,
+  },
 
   card: {
-  backgroundColor: theme.colors.white,
-  padding: 16,
-  borderRadius: theme.borderRadius.m,
-  marginBottom: 12,
+    backgroundColor: theme.colors.white,
+    padding: 16,
+    borderRadius: theme.borderRadius.m,
+    marginBottom: 12,
 
-  shadowColor: '#000',
-  shadowOffset: {
-    width: 0,
-    height: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 2,
   },
-  shadowOpacity: 0.05,
-  shadowRadius: 5,
-  elevation: 2,
-},
 
   alert: {
     fontSize: 18,
@@ -198,19 +225,19 @@ const styles = StyleSheet.create({
   },
 
   date: {
-  fontSize: 13,
-  color: theme.colors.secondary,
-  marginTop: 8,
-  marginBottom: 12,
-},
+    fontSize: 13,
+    color: theme.colors.secondary,
+    marginTop: 8,
+    marginBottom: 12,
+  },
 
   button: {
-  backgroundColor: '#4CAF50',
-  paddingVertical: 10,
-  borderRadius: 8,
-  alignItems: 'center',
-  marginTop: 4,
-},
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 4,
+  },
 
   buttonText: {
     color: '#FFF',

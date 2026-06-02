@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, } from 'react-native';
-import { theme } from '../styles/theme';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
+import { theme } from '../styles/theme';
 
 type Evento = {
   id: number;
@@ -14,6 +24,8 @@ type Evento = {
 };
 
 export default function HistoricoEventosScreen() {
+  const navigation = useNavigation();
+
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -53,6 +65,22 @@ export default function HistoricoEventosScreen() {
   return (
     <SafeAreaView style={styles.container}>
 
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+        >
+          <Feather
+            name="arrow-left"
+            size={28}
+            color={theme.colors.textPrimary}
+          />
+        </TouchableOpacity>
+
+        <Text style={styles.title}>
+          Histórico IoT
+        </Text>
+      </View>
+
       <Text style={styles.counter}>
         Total de eventos: {eventos.length}
       </Text>
@@ -62,9 +90,10 @@ export default function HistoricoEventosScreen() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
+
             <Text style={styles.cardTitle}>
-  💊 {item.medicamento_nome || 'Medicamento'}
-</Text>
+              💊 {item.medicamento_nome || 'Medicamento'}
+            </Text>
 
             <Text style={styles.cardText}>
               Compartimento: {item.compartimento}
@@ -87,6 +116,7 @@ export default function HistoricoEventosScreen() {
             <Text style={styles.cardDate}>
               {new Date(item.horario).toLocaleString('pt-BR')}
             </Text>
+
           </View>
         )}
         ListEmptyComponent={
@@ -106,11 +136,17 @@ const styles = StyleSheet.create({
     padding: theme.spacing.l,
   },
 
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+
   title: {
     fontSize: 26,
     fontWeight: 'bold',
     color: theme.colors.textPrimary,
-    marginBottom: 10,
+    marginLeft: 12,
   },
 
   counter: {
