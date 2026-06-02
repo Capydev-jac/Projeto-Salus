@@ -109,22 +109,47 @@ export default function HomeScreen({ navigation }: Props) {
           style={{ marginBottom: theme.spacing.l }}
         />
 
-        <CustomButton
-          title="Histórico IoT"
-          onPress={() =>
-            navigation.navigate(
-              'HistoricoEventos'
-            )
-          }
-        />
-        <CustomButton
-          title="Notificações"
-          onPress={() =>
-            navigation.navigate(
-              'Notificacoes'
-            )
-          }
-        />
+        <View style={styles.quickActions}>
+
+  <TouchableOpacity
+    style={styles.quickButton}
+    onPress={() =>
+      navigation.navigate(
+        'HistoricoEventos'
+      )
+    }
+  >
+    <Feather
+      name="clock"
+      size={18}
+      color="#FFF"
+    />
+
+    <Text style={styles.quickButtonText}>
+      Histórico
+    </Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.quickButton}
+    onPress={() =>
+      navigation.navigate(
+        'Notificacoes'
+      )
+    }
+  >
+    <Feather
+      name="bell"
+      size={18}
+      color="#FFF"
+    />
+
+    <Text style={styles.quickButtonText}>
+      Notificações
+    </Text>
+  </TouchableOpacity>
+
+</View>
         
         <FlatList
           data={dependentes}
@@ -300,4 +325,27 @@ const styles = StyleSheet.create({
   cancelText: { color: theme.colors.textSecondary, fontWeight: 'bold' },
   saveBtn: { backgroundColor: theme.colors.primary, paddingVertical: 10, paddingHorizontal: 20, borderRadius: theme.borderRadius.m },
   saveText: { color: theme.colors.white, fontWeight: 'bold' },
+
+  quickActions: {
+  flexDirection: 'row',
+  gap: 12,
+  marginBottom: 20,
+},
+
+quickButton: {
+  flex: 1,
+  backgroundColor: theme.colors.primary,
+  borderRadius: 16,
+  paddingVertical: 14,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+quickButtonText: {
+  color: '#FFF',
+  fontWeight: 'bold',
+  marginLeft: 8,
+  fontSize: 15,
+},
 });
