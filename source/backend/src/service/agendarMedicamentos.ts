@@ -23,55 +23,58 @@ export function iniciarAgendador() {
       );
 
       const diasSemana = [
-  'Dom',
-  'Seg',
-  'Ter',
-  'Qua',
-  'Qui',
-  'Sex',
-  'Sáb'
-];
+        'Dom',
+        'Seg',
+        'Ter',
+        'Qua',
+        'Qui',
+        'Sex',
+        'Sáb'
+      ];
 
-const diaAtual =
-  diasSemana[
-    new Date().getDay()
-  ];
+      const diaAtual =
+        diasSemana[
+          new Date().getDay()
+        ];
 
-const resultado =
-  await pool.query(`
-    SELECT
-      id,
-      nome,
-      compartimento,
-      horario,
-      dias
-    FROM medicamentos
-    WHERE horario = $1
-  `, [agora]);
-
-const medicamentosFiltrados =
-  resultado.rows.filter(
-    medicamento => {
-
-      try {
-
-        const dias =
-          JSON.parse(
-            medicamento.dias
-          );
-
-        return dias.includes(
-          diaAtual
+      const resultado =
+        await pool.query(
+          `
+          SELECT
+            id,
+            nome,
+            compartimento,
+            horario,
+            dias
+          FROM medicamentos
+          WHERE horario = $1
+          `,
+          [agora]
         );
 
-      } catch {
+      const medicamentosFiltrados =
+        resultado.rows.filter(
+          medicamento => {
 
-        return false;
+            try {
 
-      }
+              const dias =
+                JSON.parse(
+                  medicamento.dias
+                );
 
-    }
-  );
+              return dias.includes(
+                diaAtual
+              );
+
+            } catch {
+
+              return false;
+
+            }
+
+          }
+        );
 
       console.log(
         `📋 Encontrados ${medicamentosFiltrados.length} medicamentos`
@@ -81,6 +84,29 @@ const medicamentosFiltrados =
         const medicamento
         of medicamentosFiltrados
       ) {
+
+        const entregaHoje =
+          await pool.query(
+            `
+            SELECT id
+            FROM entregas_realizadas
+            WHERE medicamento_id = $1
+            AND DATE(data_execucao) = CURRENT_DATE
+            `,
+            [medicamento.id]
+          );
+
+        if (
+          entregaHoje.rows.length > 0
+        ) {
+
+          console.log(
+            `⏭️ ${medicamento.nome} já entregue hoje`
+          );
+
+          continue;
+
+        }
 
         console.log(
           `💊 Liberando ${medicamento.nome}`
@@ -92,6 +118,20 @@ const medicamentosFiltrados =
           compartimento:
             medicamento.compartimento
         });
+
+        await pool.query(
+          `
+          INSERT INTO entregas_realizadas (
+            medicamento_id
+          )
+          VALUES ($1)
+          `,
+          [medicamento.id]
+        );
+
+        console.log(
+          `✅ Entrega registrada para ${medicamento.nome}`
+        );
 
         console.log(
           `📤 Comando enviado para compartimento ${medicamento.compartimento}`
