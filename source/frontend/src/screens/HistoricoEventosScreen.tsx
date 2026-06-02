@@ -4,10 +4,10 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
 import { theme } from '../styles/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Evento = {
   id: number;

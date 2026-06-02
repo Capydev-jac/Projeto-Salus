@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
-  View, Text, TouchableOpacity, StyleSheet, SafeAreaView, 
+  View, Text, TouchableOpacity, StyleSheet, 
   FlatList, Alert, ActivityIndicator, Modal, Platform 
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';

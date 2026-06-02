@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-  View, Text, TextInput, StyleSheet, SafeAreaView,
+  View, Text, TextInput, StyleSheet,
   TouchableOpacity, ActivityIndicator,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

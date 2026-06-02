@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 import {
-  SafeAreaView,
   Text,
   FlatList,
   View,
@@ -9,6 +8,8 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
+
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { theme } from '../styles/theme';
 
@@ -92,7 +93,7 @@ export default function NotificacoesScreen() {
         🔔 Notificações
       </Text>
 
-      <Text style={styles.subtitle}>
+      <Text style={styles.counter}>
         Total de notificações: {notificacoes.length}
       </Text>
 
@@ -108,7 +109,9 @@ export default function NotificacoesScreen() {
           <View style={styles.card}>
 
             <Text style={styles.alert}>
-              ⚠️ Alerta
+              {item.mensagem.includes('Falha')
+                ? '🚨 Falha na Entrega'
+                : '⚠️ Medicamento Não Retirado'}
             </Text>
 
             <Text style={styles.message}>
@@ -158,25 +161,32 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 8,
   },
 
-  subtitle: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 20,
-  },
+  counter: {
+  fontSize: 14,
+  color: theme.colors.textSecondary,
+  marginBottom: 20,
+},
 
   card: {
-    backgroundColor:
-      theme.colors.white,
-    padding: 18,
-    borderRadius: 16,
-    marginBottom: 14,
-    elevation: 2,
+  backgroundColor: theme.colors.white,
+  padding: 16,
+  borderRadius: theme.borderRadius.m,
+  marginBottom: 12,
+
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
   },
+  shadowOpacity: 0.05,
+  shadowRadius: 5,
+  elevation: 2,
+},
 
   alert: {
     fontSize: 18,
@@ -191,18 +201,19 @@ const styles = StyleSheet.create({
   },
 
   date: {
-    color:
-      theme.colors.textSecondary,
-    fontSize: 14,
-    marginBottom: 12,
-  },
+  fontSize: 13,
+  color: theme.colors.secondary,
+  marginTop: 8,
+  marginBottom: 12,
+},
 
   button: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
+  backgroundColor: '#4CAF50',
+  paddingVertical: 10,
+  borderRadius: 8,
+  alignItems: 'center',
+  marginTop: 4,
+},
 
   buttonText: {
     color: '#FFF',
