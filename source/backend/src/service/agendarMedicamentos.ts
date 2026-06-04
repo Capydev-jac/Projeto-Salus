@@ -8,20 +8,27 @@ export function iniciarAgendador() {
     try {
 
       const agora =
-  new Date()
-    .toLocaleTimeString(
-      'pt-BR',
-      {
-        timeZone: 'America/Sao_Paulo',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }
-    );
+        new Date()
+          .toLocaleTimeString(
+            'pt-BR',
+            {
+              timeZone: 'America/Sao_Paulo',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false
+            }
+          );
 
-      console.log(
-        `⏰ Verificando horário: ${agora}`
-      );
+      const dataSP =
+        new Date(
+          new Date().toLocaleString(
+            'en-US',
+            {
+              timeZone:
+                'America/Sao_Paulo'
+            }
+          )
+        );
 
       const diasSemana = [
         'Dom',
@@ -35,8 +42,16 @@ export function iniciarAgendador() {
 
       const diaAtual =
         diasSemana[
-          new Date().getDay()
+          dataSP.getDay()
         ];
+
+      console.log(
+        `⏰ Verificando horário: ${agora}`
+      );
+
+      console.log(
+        `📅 Dia atual: ${diaAtual}`
+      );
 
       const resultado =
         await pool.query(
@@ -53,22 +68,47 @@ export function iniciarAgendador() {
           [agora]
         );
 
+      console.log(
+        '📦 Resultado SQL:',
+        resultado.rows
+      );
+
       const medicamentosFiltrados =
         resultado.rows.filter(
           medicamento => {
 
             try {
 
+              console.log(
+                '🗓️ DIAS:',
+                medicamento.dias,
+                typeof medicamento.dias
+              );
+
               const dias =
-                JSON.parse(
+                Array.isArray(
                   medicamento.dias
-                );
+                )
+                  ? medicamento.dias
+                  : JSON.parse(
+                      medicamento.dias
+                    );
+
+              console.log(
+                '✅ Dias convertidos:',
+                dias
+              );
 
               return dias.includes(
                 diaAtual
               );
 
-            } catch {
+            } catch (erro) {
+
+              console.log(
+                '❌ Erro ao processar dias:',
+                erro
+              );
 
               return false;
 
@@ -113,12 +153,21 @@ export function iniciarAgendador() {
           `💊 Liberando ${medicamento.nome}`
         );
 
-        enviarComando({
+        const payload = {
           id: medicamento.id,
           nome: medicamento.nome,
           compartimento:
             medicamento.compartimento
-        });
+        };
+
+        console.log(
+          '📤 Payload MQTT:',
+          payload
+        );
+
+        enviarComando(
+          payload
+        );
 
         await pool.query(
           `
@@ -143,7 +192,7 @@ export function iniciarAgendador() {
     } catch (error) {
 
       console.error(
-        'Erro no agendador:',
+        '❌ Erro no agendador:',
         error
       );
 
