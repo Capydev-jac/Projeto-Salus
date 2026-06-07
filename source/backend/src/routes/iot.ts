@@ -1,14 +1,6 @@
 import { Router } from 'express';
-
-import {
-  receberEvento,
-  proximoMedicamento,
-  listarEventos
-} from '../controllers/iotController';
-
-import {
-  enviarComando
-} from '../config/mqtt';
+import { receberEvento, proximoMedicamento, listarEventos } from '../controllers/iotController';
+import { enviarComando } from '../config/mqtt';
 
 const router = Router();
 
@@ -68,6 +60,23 @@ router.get(
   '/eventos',
   listarEventos
 );
+
+// Rota teste
+
+router.post('/teste', (_, res) => {
+
+  enviarComando({
+    id: 999,
+    nome: 'Teste Manual',
+    compartimento: 1
+  });
+
+  res.json({
+    sucesso: true,
+    mensagem: 'Comando enviado'
+  });
+
+});
 
 
 export default router;

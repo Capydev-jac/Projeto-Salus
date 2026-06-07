@@ -66,6 +66,37 @@ export default function HomeScreen({ navigation }: Props) {
     }
   };
 
+  async function testarDispenser() {
+
+  try {
+
+    const response =
+      await fetch(
+        'https://projeto-salus-production.up.railway.app/iot/teste',
+        {
+          method: 'POST',
+        }
+      );
+
+    const data =
+      await response.json();
+
+    Alert.alert(
+      'Sucesso',
+      data.mensagem
+    );
+
+  } catch {
+
+    Alert.alert(
+      'Erro',
+      'Falha ao enviar teste'
+    );
+
+  }
+
+}
+
   // Funções de Exclusão
   const abrirModalExcluir = (dep: Dependente) => {
     setDepParaExcluir(dep);
@@ -151,9 +182,24 @@ export default function HomeScreen({ navigation }: Props) {
   </TouchableOpacity>
 
 </View>
-        
-        <FlatList
-          data={dependentes}
+
+<TouchableOpacity
+  style={styles.testButton}
+  onPress={testarDispenser}
+>
+  <Feather
+    name="play-circle"
+    size={20}
+    color="#FFF"
+  />
+
+  <Text style={styles.testButtonText}>
+    Testar Dispenser
+  </Text>
+</TouchableOpacity>
+
+<FlatList
+  data={dependentes}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.card}>
@@ -348,5 +394,31 @@ quickButtonText: {
   fontWeight: 'bold',
   marginLeft: 8,
   fontSize: 15,
+},
+testButton: {
+  backgroundColor: '#2E7D32',
+  borderRadius: 16,
+  paddingVertical: 16,
+  marginBottom: 20,
+
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.08,
+  shadowRadius: 5,
+  elevation: 2,
+},
+
+testButtonText: {
+  color: '#FFF',
+  fontWeight: 'bold',
+  fontSize: 16,
+  marginLeft: 8,
 },
 });

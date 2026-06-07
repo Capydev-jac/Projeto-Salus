@@ -18,8 +18,11 @@ app.use(express.json());
 app.use('/api', authRoutes);
 app.use('/api', dependentesRoutes);
 app.use('/api', medicamentosRoutes);
+
 app.use('/iot', iotRoutes);
+
 app.use('/notificacoes', notificacaoRoutes)
+
 
 
 // ─── Inicialização do Servidor ────────────────────────────────────────────────
