@@ -1,5 +1,6 @@
 import { pool } from '../database';
 import { enviarComando } from '../config/mqtt';
+import { enviarPushNotification } from './enviarPush';
 
 export function iniciarAgendador() {
 
@@ -61,7 +62,8 @@ export function iniciarAgendador() {
             nome,
             compartimento,
             horario,
-            dias
+            dias,
+            dependente_id
           FROM medicamentos
           WHERE horario = $1
           `,
@@ -186,6 +188,83 @@ export function iniciarAgendador() {
         console.log(
           `📤 Comando enviado para compartimento ${medicamento.compartimento}`
         );
+
+        // Aguarda 5 minutos para verificar se o medicamento foi retirado
+        setTimeout(async () => {
+          try {
+
+            // Busca o evento IoT mais recente deste compartimento hoje
+            const retirada = await pool.query(
+              `
+              SELECT id
+              FROM eventos_iot
+              WHERE compartimento = $1
+                AND status = 'retirado'
+                AND DATE(horario) = CURRENT_DATE
+              `,
+              [medicamento.compartimento]
+            );
+
+            if (retirada.rows.length > 0) {
+              console.log(
+                `✅ ${medicamento.nome} foi retirado, sem notificação.`
+              );
+              return;
+            }
+
+            // Não foi retirado — cria notificação no banco
+            const mensagem =
+              `${medicamento.nome} não foi retirado no horário ${medicamento.horario}.`;
+
+            await pool.query(
+              `
+              INSERT INTO notificacoes (medicamento_id, mensagem)
+              VALUES ($1, $2)
+              `,
+              [medicamento.id, mensagem]
+            );
+
+            console.log(
+              `🔔 Notificação criada para ${medicamento.nome}`
+            );
+
+            // Busca o push_token do responsável pelo dependente
+            const tokenResult = await pool.query(
+              `
+              SELECT u.push_token
+              FROM users u
+              JOIN dependentes d ON d.responsavel_id = u.id
+              WHERE d.dependente_id = $1
+                AND u.push_token IS NOT NULL
+              LIMIT 1
+              `,
+              [medicamento.dependente_id]
+            );
+
+            const pushToken = tokenResult.rows[0]?.push_token;
+
+            if (pushToken) {
+              await enviarPushNotification(
+                pushToken,
+                '⚠️ Medicamento não retirado',
+                mensagem
+              );
+              console.log(
+                `📲 Push enviado para o responsável de ${medicamento.nome}`
+              );
+            } else {
+              console.log(
+                `⚠️ Responsável sem push_token cadastrado`
+              );
+            }
+
+          } catch (erroNotif) {
+            console.error(
+              '❌ Erro ao verificar retirada e notificar:',
+              erroNotif
+            );
+          }
+        }, 5 * 60 * 1000); // 5 minutos
 
       }
 

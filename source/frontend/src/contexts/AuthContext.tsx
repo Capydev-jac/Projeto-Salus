@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useRef, useEffect } from 'react';
 import { create } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { registrarPushToken } from '../hooks/usePushNotifications';
 
 export type User = { id?: string; email: string; nome?: string; role: 'responsavel' | 'dependente' };
 export type Dependente = { id: string; nome: string; email: string };
@@ -73,6 +74,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const response = await api.get('/dependentes', { headers: { Authorization: `Bearer ${savedToken}` } });
             setDependentes(response.data);
           }
+          // Registra push token ao restaurar sessão (app reaberto)
+          if (parsedUser.id) {
+            registrarPushToken(Number(parsedUser.id), savedToken).catch(console.warn);
+          }
         }
       } catch {
         // Se houver erro ao restaurar, ignora e mantém o usuário deslogado
@@ -107,6 +112,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (userData.role === 'responsavel') {
         await loadDependentes();
       }
+      // Registra push token após login bem-sucedido
+      registrarPushToken(Number(userData.id), jwtToken).catch(console.warn);
     } catch (error: unknown) {
       throw new Error(getErrorMessage(error, 'Erro de conexão. Verifique se o servidor está rodando.'));
     }

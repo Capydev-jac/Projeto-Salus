@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../middleware/auth';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { pool } from '../database';
@@ -64,5 +65,25 @@ export const login = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Erro interno no servidor.' });
+  }
+};
+
+export const salvarPushToken = async (req: AuthRequest, res: Response) => {
+  const { token } = req.body;
+  const userId = req.user?.id;
+
+  if (!token) {
+    return res.status(400).json({ message: 'Token não informado.' });
+  }
+
+  try {
+    await pool.query(
+      'UPDATE users SET push_token = $1 WHERE id = $2',
+      [token, userId]
+    );
+    res.status(200).json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao salvar push token.' });
   }
 };

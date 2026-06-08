@@ -148,17 +148,12 @@ const styles = StyleSheet.create({
 
   form: { width: '100%' },
   input: {
-    backgroundColor: theme.colors.inputBackground,
-    borderRadius: theme.borderRadius.m,
-    padding: 18,
-    marginBottom: theme.spacing.m,
-    fontSize: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 2,
-  },
+  backgroundColor: theme.colors.inputBackground,
+  borderRadius: theme.borderRadius.m,
+  padding: 18,
+  marginBottom: theme.spacing.m,
+  fontSize: 16,
+},
   inputError: {
     borderWidth: 1,
     borderColor: '#FF3B30',
