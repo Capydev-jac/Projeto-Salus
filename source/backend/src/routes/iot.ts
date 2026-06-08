@@ -1,82 +1,82 @@
-import { Router } from 'express';
-import { receberEvento, proximoMedicamento, listarEventos } from '../controllers/iotController';
-import { enviarComando } from '../config/mqtt';
+  import { Router } from 'express';
+  import { receberEvento, proximoMedicamento, listarEventos } from '../controllers/iotController';
+  import { enviarComando } from '../config/mqtt';
 
-const router = Router();
+  const router = Router();
 
-// ======================================
-// EVENTOS DO ESP32
-// ======================================
+  // ======================================
+  // EVENTOS DO ESP32
+  // ======================================
 
-router.post(
-  '/evento',
-  receberEvento
-);
+  router.post(
+    '/evento',
+    receberEvento
+  );
 
-// ======================================
-// MEDICAMENTO ATUAL
-// ======================================
+  // ======================================
+  // MEDICAMENTO ATUAL
+  // ======================================
 
-router.get(
-  '/proximo-medicamento',
-  proximoMedicamento
-);
+  router.get(
+    '/proximo-medicamento',
+    proximoMedicamento
+  );
 
-// ======================================
-// ENVIA COMANDO MQTT
-// ======================================
+  // ======================================
+  // ENVIA COMANDO MQTT
+  // ======================================
 
-router.post(
-  '/liberar',
-  async (_, res) => {
+  router.post(
+    '/liberar',
+    async (_, res) => {
 
-    const payload = {
+      const payload = {
 
-      id: 1,
+        id: 1,
 
-      nome: 'Dipirona',
+        nome: 'Dipirona',
 
-      compartimento: 2,
+        compartimento: 2,
 
-    };
+      };
 
-    enviarComando(payload);
+      enviarComando(payload);
 
-    return res.json({
+      return res.json({
 
-      mensagem:
-        'Comando enviado'
+        mensagem:
+          'Comando enviado'
 
+      });
+
+    }
+  );
+
+  // ======================================
+  // LISTA EVENTOS IOT
+  // ======================================
+
+  router.get(
+    '/eventos',
+    listarEventos
+  );
+
+  // Rota teste
+
+  router.post('/teste', (_, res) => {
+
+    enviarComando({
+      id: 999,
+      nome: 'Teste Manual',
+      compartimento: 1
     });
 
-  }
-);
+    res.json({
+      sucesso: true,
+      mensagem: 'Comando enviado'
+    });
 
-// ======================================
-// LISTA EVENTOS IOT
-// ======================================
-
-router.get(
-  '/eventos',
-  listarEventos
-);
-
-// Rota teste
-
-router.post('/teste', (_, res) => {
-
-  enviarComando({
-    id: 999,
-    nome: 'Teste Manual',
-    compartimento: 1
   });
 
-  res.json({
-    sucesso: true,
-    mensagem: 'Comando enviado'
-  });
 
-});
-
-
-export default router;
+  export default router;
