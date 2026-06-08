@@ -21,10 +21,10 @@
 // ======================================
 
 const char* ssid =
-  "TEO e FRED";
+  "LENIN&MARX";
 
 const char* password =
-  "casadosgatos";
+  "anabrava";
 
 // ======================================
 // MQTT
@@ -450,6 +450,18 @@ bool aguardarRemedio() {
 
     client.loop();
 
+    Serial.print(
+      "Sensor remedio: "
+    );
+
+    Serial.println(
+      digitalRead(
+        sensorGaveta
+      )
+    );
+
+    delay(300);
+
     if (
       digitalRead(
         sensorGaveta
@@ -795,13 +807,14 @@ void callback(
 
 }
 
-// ======================================
-// SETUP
-// ======================================
+
+ // LCD Setup
 
 void setup() {
 
   Serial.begin(115200);
+
+  Wire.begin(32, 33);
 
   // ======================================
   // LCD
