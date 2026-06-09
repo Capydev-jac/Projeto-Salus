@@ -76,6 +76,7 @@ export default function LoginScreen({ navigation }: Props) {
 
       <View style={styles.form}>
         <TextInput
+          placeholderTextColor="#999999"
           style={[styles.input, emailError ? styles.inputError : null]}
           placeholder="E-mail"
           value={email}
@@ -87,6 +88,7 @@ export default function LoginScreen({ navigation }: Props) {
         {emailError ? <Text style={styles.fieldError}>{emailError}</Text> : null}
 
         <TextInput
+          placeholderTextColor="#999999"
           style={styles.input}
           placeholder="Senha"
           value={senha}
@@ -148,12 +150,17 @@ const styles = StyleSheet.create({
 
   form: { width: '100%' },
   input: {
-  backgroundColor: theme.colors.inputBackground,
-  borderRadius: theme.borderRadius.m,
-  padding: 18,
-  marginBottom: theme.spacing.m,
-  fontSize: 16,
-},
+    backgroundColor: theme.colors.inputBackground,
+    borderRadius: theme.borderRadius.m,
+    padding: 18,
+    marginBottom: theme.spacing.m,
+    fontSize: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 2,
+  },
   inputError: {
     borderWidth: 1,
     borderColor: '#FF3B30',

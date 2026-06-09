@@ -112,6 +112,7 @@ export default function DependentSignUpScreen({ navigation }: Props) {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Nome do Dependente</Text>
         <TextInput
+          placeholderTextColor="#999999"
           style={[styles.input, nomeError ? styles.inputError : null]}
           placeholder="Ex: Maria"
           value={nome}
@@ -122,6 +123,7 @@ export default function DependentSignUpScreen({ navigation }: Props) {
 
         <Text style={styles.label}>Email do Dependente</Text>
         <TextInput
+          placeholderTextColor="#999999"
           style={[styles.input, emailError ? styles.inputError : null]}
           placeholder="email@exemplo.com"
           value={email}
@@ -134,6 +136,7 @@ export default function DependentSignUpScreen({ navigation }: Props) {
 
         <Text style={styles.label}>Senha</Text>
         <TextInput
+          placeholderTextColor="#999999"
           style={[styles.input, senhaInputBorderColor()]}
           placeholder="Crie uma senha"
           value={senha}
@@ -166,6 +169,7 @@ export default function DependentSignUpScreen({ navigation }: Props) {
 
         <Text style={[styles.label, { marginTop: senhaFocused ? 8 : 0 }]}>Confirmar Senha</Text>
         <TextInput
+          placeholderTextColor="#999999"
           style={[styles.input, confirmarSenhaError ? styles.inputError : null]}
           placeholder="Confirme a senha"
           value={confirmarSenha}

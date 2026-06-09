@@ -118,6 +118,7 @@ export default function SignUpScreen({ navigation }: Props) {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Qual seu Nome?</Text>
         <TextInput
+          placeholderTextColor="#999999"
           style={[styles.input, nomeError ? styles.inputError : null]}
           placeholder="Ex: João"
           value={nome}
@@ -128,6 +129,7 @@ export default function SignUpScreen({ navigation }: Props) {
 
         <Text style={styles.label}>Qual seu Email?</Text>
         <TextInput
+          placeholderTextColor="#999999"
           style={[styles.input, emailError ? styles.inputError : null]}
           placeholder="Insira seu Email"
           value={email}
@@ -140,6 +142,7 @@ export default function SignUpScreen({ navigation }: Props) {
 
         <Text style={styles.label}>Crie uma Senha</Text>
         <TextInput
+          placeholderTextColor="#999999"
           style={[styles.input, senhaInputBorderColor()]}
           placeholder="Crie uma senha"
           value={senha}
@@ -174,6 +177,7 @@ export default function SignUpScreen({ navigation }: Props) {
 
         <Text style={[styles.label, { marginTop: senhaFocused ? 8 : 0 }]}>Confirme a Senha</Text>
         <TextInput
+          placeholderTextColor="#999999"
           style={[styles.input, confirmarSenhaError ? styles.inputError : null]}
           placeholder="Confirme a senha"
           value={confirmarSenha}
