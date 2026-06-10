@@ -25,11 +25,9 @@ export default function LoginScreen({ navigation }: Props) {
   const handleLogin = async () => {
     const userEmail = email.toLowerCase().trim();
 
-    // Limpa erros anteriores
     setServerError('');
     setEmailError('');
 
-    // Validações inline
     let isValid = true;
 
     if (!userEmail) {
@@ -66,7 +64,6 @@ export default function LoginScreen({ navigation }: Props) {
         <Text style={styles.subtitle}>Acesse sua rotina de saúde.</Text>
       </View>
 
-      {/* Banner de erro do servidor */}
       {serverError ? (
         <View style={styles.errorBanner}>
           <Feather name="alert-circle" size={16} color="#FF3B30" />
@@ -129,8 +126,6 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.s,
   },
   subtitle: { fontSize: 16, color: theme.colors.textSecondary },
-
-  // Banner de erro
   errorBanner: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -147,7 +142,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     flex: 1,
   },
-
   form: { width: '100%' },
   input: {
     backgroundColor: theme.colors.inputBackground,
@@ -155,6 +149,7 @@ const styles = StyleSheet.create({
     padding: 18,
     marginBottom: theme.spacing.m,
     fontSize: 16,
+    color: theme.colors.textPrimary,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -172,8 +167,6 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.m,
     marginLeft: 5,
   },
-
-  // Botão com estado de loading
   button: {
     backgroundColor: theme.colors.primary,
     padding: theme.spacing.m,

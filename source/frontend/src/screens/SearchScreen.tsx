@@ -90,16 +90,44 @@ export default function SearchScreen({ route, navigation }: Props) {
 
       <ScrollView style={styles.form}>
         <Text style={styles.label}>Nome do Medicamento</Text>
-        <TextInput style={styles.input} placeholder="Ex: Losartana" value={nome} onChangeText={setNome} />
+        <TextInput
+          style={styles.input}
+          placeholder="Ex: Losartana"
+          placeholderTextColor="#999999"
+          value={nome}
+          onChangeText={setNome}
+        />
 
         <Text style={styles.label}>Dosagem</Text>
-        <TextInput style={styles.input} placeholder="Ex: 1 comprimido" value={dose} onChangeText={setDose} />
+        <TextInput
+          style={styles.input}
+          placeholder="Ex: 1 comprimido"
+          placeholderTextColor="#999999"
+          value={dose}
+          onChangeText={setDose}
+        />
 
         <Text style={styles.label}>Horário (HH:MM)</Text>
-        <TextInput style={styles.input} placeholder="Ex: 08:00" value={horario} onChangeText={formatarHorario} keyboardType="numeric" maxLength={5} />
+        <TextInput
+          style={styles.input}
+          placeholder="Ex: 08:00"
+          placeholderTextColor="#999999"
+          value={horario}
+          onChangeText={formatarHorario}
+          keyboardType="numeric"
+          maxLength={5}
+        />
 
         <Text style={styles.label}>Compartimento</Text>
-        <TextInput style={styles.input} placeholder="Ex: 1" value={compartimento} onChangeText={setCompartimento} keyboardType="numeric"/>
+        <TextInput
+          style={styles.input}
+          placeholder="Ex: 1"
+          placeholderTextColor="#999999"
+          value={compartimento}
+          onChangeText={setCompartimento}
+          keyboardType="numeric"
+        />
+
         <Text style={styles.label}>Dias da Semana</Text>
         <View style={styles.daysContainer}>
           {DIAS_SEMANA.map((dia) => (
@@ -136,7 +164,14 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: 'bold', color: theme.colors.textPrimary },
   form: { flex: 1 },
   label: { fontSize: 16, fontWeight: '600', marginBottom: 8, color: theme.colors.textPrimary },
-  input: { backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.m, padding: 15, marginBottom: 20, fontSize: 16 },
+  input: {
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.m,
+    padding: 15,
+    marginBottom: 20,
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+  },
   daysContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 30 },
   dayCircle: { width: 45, height: 45, borderRadius: 22.5, backgroundColor: theme.colors.grayLight, justifyContent: 'center', alignItems: 'center' },
   dayCircleActive: { backgroundColor: theme.colors.primary },

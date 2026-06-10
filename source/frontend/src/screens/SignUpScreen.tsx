@@ -239,6 +239,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginBottom: 15,
     fontSize: 16,
+    color: theme.colors.textPrimary,
   },
   inputError: { borderWidth: 1, borderColor: '#FF3B30', marginBottom: 5 },
   inputSuccess: { borderWidth: 1, borderColor: '#34C759', marginBottom: 8 },

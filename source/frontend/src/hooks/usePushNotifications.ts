@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 
 // Configura como a notificação aparece enquanto o app está aberto
 Notifications.setNotificationHandler({
@@ -40,7 +41,19 @@ export async function registrarPushToken(userId: number, jwtToken: string) {
     });
   }
 
-  const token = (await Notifications.getExpoPushTokenAsync()).data;
+  // em APKs gerados com `eas build`, o projectId é obrigatório.
+  // Sem ele, getExpoPushTokenAsync() falha silenciosamente e não retorna token.
+  const projectId = Constants.expoConfig?.extra?.eas?.projectId as string | undefined;
+
+  if (!projectId) {
+    console.warn('projectId não encontrado em app.json (extra.eas.projectId). Push não será registrado.');
+    return;
+  }
+
+  const token = (
+    await Notifications.getExpoPushTokenAsync({ projectId })
+  ).data;
+
   console.log('Push Token:', token);
 
   // Salva o token no backend
